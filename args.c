@@ -9,7 +9,12 @@ void usage(const char* program_name) {
     printf("  upload, -u <file> <url>           Upload file to URL\n\n");
     printf("Options:\n");
     printf("  --no-resume, -n               Disable resume functionality\n");
+    printf("  --version, -v                 Show version information\n");
     printf("  --help, -h                    Show this help message\n");
+}
+
+void version(void) {
+    printf("flux version %s\n", FLUX_VERSION);
 }
 
 int parse(int argc, char* argv[], char** command, char** arg1, char** arg2, bool* resume) {
@@ -28,6 +33,9 @@ int parse(int argc, char* argv[], char** command, char** arg1, char** arg2, bool
             break; // This is a command alias, not an option
         } else if (strcmp(argv[arg_offset], "--no-resume") == 0 || strcmp(argv[arg_offset], "-n") == 0) {
             *resume = false;
+        } else if (strcmp(argv[arg_offset], "--version") == 0 || strcmp(argv[arg_offset], "-v") == 0) {
+            version();
+            return 0;
         } else if (strcmp(argv[arg_offset], "--help") == 0 || strcmp(argv[arg_offset], "-h") == 0) {
             usage(argv[0]);
             return 0;
