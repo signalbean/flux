@@ -10,7 +10,7 @@ size_t read_callback(char* buffer, size_t size, size_t nitems, void* file);
 // Progress tracking
 typedef struct {
     long last_time;
-    curl_off_t last_bytes;
+    curl_off_t resume_from;
 } ProgressData;
 
 int progress_callback(void* clientp, curl_off_t dltotal, curl_off_t dlnow, 
