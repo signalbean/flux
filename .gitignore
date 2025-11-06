@@ -1,0 +1,6 @@
+*.o
+flux
+*.exe
+core
+*~
+.DS_Store
