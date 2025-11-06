@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void print_usage(const char* program_name) {
+void usage(const char* program_name) {
     printf("Usage: %s [OPTIONS] <command> <url> [output_file]\n\n", program_name);
     printf("Commands:\n");
     printf("  download, -d <url> [output_file]  Download file from URL\n");
@@ -12,9 +12,9 @@ void print_usage(const char* program_name) {
     printf("  --help, -h                    Show this help message\n");
 }
 
-int parse_args(int argc, char* argv[], char** command, char** arg1, char** arg2, bool* resume) {
+int parse(int argc, char* argv[], char** command, char** arg1, char** arg2, bool* resume) {
     if (argc < 3) {
-        print_usage(argv[0]);
+        usage(argv[0]);
         return 1;
     }
 
@@ -29,18 +29,18 @@ int parse_args(int argc, char* argv[], char** command, char** arg1, char** arg2,
         } else if (strcmp(argv[arg_offset], "--no-resume") == 0 || strcmp(argv[arg_offset], "-n") == 0) {
             *resume = false;
         } else if (strcmp(argv[arg_offset], "--help") == 0 || strcmp(argv[arg_offset], "-h") == 0) {
-            print_usage(argv[0]);
+            usage(argv[0]);
             return 0;
         } else {
             printf("Unknown option: %s\n", argv[arg_offset]);
-            print_usage(argv[0]);
+            usage(argv[0]);
             return 1;
         }
         arg_offset++;
     }
 
     if (argc - arg_offset < 2) {
-        print_usage(argv[0]);
+        usage(argv[0]);
         return 1;
     }
 

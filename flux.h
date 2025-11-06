@@ -8,9 +8,9 @@ typedef struct {
 } FluxTool;
 
 // Tool management
-FluxTool* flux_create(void);
-void flux_destroy(FluxTool* tool);
+FluxTool* create(void);
+void destroy(FluxTool* tool);
 
 // Operations
-bool download_file(FluxTool* tool, const char* url, const char* output_file, bool resume);
-bool upload_file(FluxTool* tool, const char* local_file, const char* url);
+bool download(FluxTool* tool, const char* url, const char* output_file, bool resume);
+bool upload(FluxTool* tool, const char* local_file, const char* url);

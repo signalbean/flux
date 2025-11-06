@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-FluxTool* flux_create(void) {
+FluxTool* create(void) {
     FluxTool* tool = malloc(sizeof(FluxTool));
     if (!tool) return NULL;
     
@@ -20,7 +20,7 @@ FluxTool* flux_create(void) {
     return tool;
 }
 
-void flux_destroy(FluxTool* tool) {
+void destroy(FluxTool* tool) {
     if (tool) {
         if (tool->curl) curl_easy_cleanup(tool->curl);
         free(tool);
@@ -28,7 +28,7 @@ void flux_destroy(FluxTool* tool) {
     curl_global_cleanup();
 }
 
-bool download_file(FluxTool* tool, const char* url, const char* output_file, bool resume) {
+bool download(FluxTool* tool, const char* url, const char* output_file, bool resume) {
     if (!tool || !tool->curl) return false;
 
     FILE* file;
@@ -87,7 +87,7 @@ bool download_file(FluxTool* tool, const char* url, const char* output_file, boo
     }
 }
 
-bool upload_file(FluxTool* tool, const char* local_file, const char* url) {
+bool upload(FluxTool* tool, const char* local_file, const char* url) {
     if (!tool || !tool->curl) return false;
 
     struct stat st;
