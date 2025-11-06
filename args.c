@@ -14,19 +14,14 @@ void usage(const char* program_name) {
 }
 
 void version(void) {
-    printf("flux version %s\n", FLUX_VERSION);
+    printf("flux version %s\n", VERSION);
 }
 
 int parse(int argc, char* argv[], char** command, char** arg1, char** arg2, bool* resume) {
-    if (argc < 3) {
-        usage(argv[0]);
-        return 1;
-    }
-
     *resume = true;
     int arg_offset = 1;
 
-    // Parse options
+    // Parse options first
     while (arg_offset < argc && argv[arg_offset][0] == '-') {
         // Check for command aliases first
         if (strcmp(argv[arg_offset], "-d") == 0 || strcmp(argv[arg_offset], "-u") == 0) {
