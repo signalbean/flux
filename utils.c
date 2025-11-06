@@ -33,9 +33,8 @@ int progress_callback(void* clientp, curl_off_t dltotal, curl_off_t dlnow,
         printf("[");
         int pos = (int)(30 * percentage / 100.0);
         for (int i = 0; i < 30; ++i) {
-            if (i < pos) printf("=");
-            else if (i == pos) printf(">");
-            else printf(" ");
+            if (i < pos) printf("*");
+            else printf(".");
         }
         
         // Format current size
