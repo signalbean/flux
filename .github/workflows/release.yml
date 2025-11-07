@@ -21,7 +21,7 @@ jobs:
             extension: ""
           - os: windows-latest
             target: windows-amd64
-            cc: gcc
+            cc: cl
             extension: ".exe"
     runs-on: ${{ matrix.os }}
     steps:
@@ -35,23 +35,37 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: brew install curl
 
+      - name: Setup MSVC (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: microsoft/setup-msbuild@v2
+
       - name: Install dependencies (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          choco install curl-dev
-          echo "LDFLAGS=-lcurl -lws2_32" >> $GITHUB_ENV
+          vcpkg install curl:x64-windows
+          echo "VCPKG_ROOT=C:\vcpkg" >> $GITHUB_ENV
 
       - name: Get version
         id: version
         shell: bash
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
-      - name: Build
+      - name: Build (Unix)
+        if: matrix.os != 'windows-latest'
         shell: bash
         run: |
           make clean
           CC=${{ matrix.cc }} make release
           mv bin/flux${{ matrix.extension }} flux-${{ steps.version.outputs.VERSION }}-${{ matrix.target }}${{ matrix.extension }}
+
+      - name: Build (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          mkdir bin
+          cl /O2 /DNDEBUG main.c args.c flux.c utils.c /Fe:bin\flux.exe /I"%VCPKG_ROOT%\installed\x64-windows\include" /link "%VCPKG_ROOT%\installed\x64-windows\lib\libcurl.lib" ws2_32.lib
+          move bin\flux.exe flux-${{ steps.version.outputs.VERSION }}-${{ matrix.target }}.exe
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
