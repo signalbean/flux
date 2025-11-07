@@ -1,23 +1,23 @@
-CFLAGS = -Wall -Wextra -std=c99 -O2
+CFLAGS = -Wall -Wextra -std=c99 -O2 -Iinclude
 RELEASE_FLAGS = -Os -s -DNDEBUG -ffunction-sections -fdata-sections
 LDFLAGS = -Wl,--gc-sections
-SOURCES = main.c args.c flux.c utils.c
-OBJECTS = $(SOURCES:%.c=obj/%.o)
+SOURCES = $(wildcard src/*.c)
+OBJECTS = $(patsubst src/%.c,obj/%.o,$(SOURCES))
 TARGET = bin/flux
 
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS) | bin
-	gcc $(OBJECTS) -o $(TARGET) -lcurl
+	gcc $(OBJECTS) -o $(TARGET) -lcurl $(LDFLAGS)
 
-obj/%.o: %.c | obj
+obj/%.o: src/%.c | obj
 	gcc $(CFLAGS) -c $< -o $@
 
 obj:
-	mkdir -p obj
+	mkdir -p $@
 
 bin:
-	mkdir -p bin
+	mkdir -p $@
 
 release: CFLAGS += $(RELEASE_FLAGS)
 release: clean all
