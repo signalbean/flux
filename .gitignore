@@ -1,6 +1,5 @@
-*.o
-flux
-*.exe
+bin/
+obj/
 core
 *~
 .DS_Store
