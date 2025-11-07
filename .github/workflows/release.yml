@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    name: Build Release
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: linux-amd64
+            cc: gcc
+            extension: ""
+          - os: macos-latest
+            target: macos-amd64
+            cc: gcc
+            extension: ""
+          - os: windows-latest
+            target: windows-amd64
+            cc: gcc
+            extension: ".exe"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
+
+      - name: Install dependencies (macOS)
+        if: matrix.os == 'macos-latest'
+        run: brew install curl
+
+      - name: Install dependencies (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install curl-dev
+          echo "LDFLAGS=-lcurl -lws2_32" >> $GITHUB_ENV
+
+      - name: Get version
+        id: version
+        shell: bash
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Build
+        shell: bash
+        run: |
+          make clean
+          CC=${{ matrix.cc }} make release
+          mv bin/flux${{ matrix.extension }} flux-${{ steps.version.outputs.VERSION }}-${{ matrix.target }}${{ matrix.extension }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flux-${{ steps.version.outputs.VERSION }}-${{ matrix.target }}
+          path: flux-${{ steps.version.outputs.VERSION }}-${{ matrix.target }}${{ matrix.extension }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Release: ${{ github.ref_name }}"
+          files: |
+            flux-*/flux-*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
