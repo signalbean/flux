@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
 
     FluxTool* tool = create();
     if (!tool) {
-        printf("Failed to initialize flux tool\n");
+        printf("Failed to initialize\n");
         return 1;
     }
 

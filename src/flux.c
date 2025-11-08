@@ -39,7 +39,7 @@ bool download(FluxTool* tool, const char* url, const char* output_file, bool res
         if (stat(output_file, &st) == 0) {
             resume_from = st.st_size;
             file = fopen(output_file, "ab");
-            printf("Resuming from %lld bytes\n", (long long)resume_from);
+            printf("Resuming download from %lld bytes\n", (long long)resume_from);
         } else {
             file = fopen(output_file, "wb");
         }
@@ -58,7 +58,7 @@ bool download(FluxTool* tool, const char* url, const char* output_file, bool res
     curl_easy_setopt(tool->curl, CURLOPT_XFERINFOFUNCTION, progress_callback);
     curl_easy_setopt(tool->curl, CURLOPT_XFERINFODATA, &progress_data);
     curl_easy_setopt(tool->curl, CURLOPT_NOPROGRESS, 0L);
-    curl_easy_setopt(tool->curl, CURLOPT_USERAGENT, "flux/1.0");
+    curl_easy_setopt(tool->curl, CURLOPT_USERAGENT, "flux/0.1.0");
     
     if (resume_from > 0) {
         curl_easy_setopt(tool->curl, CURLOPT_RESUME_FROM_LARGE, resume_from);
@@ -109,7 +109,7 @@ bool upload(FluxTool* tool, const char* local_file, const char* url) {
     curl_easy_setopt(tool->curl, CURLOPT_XFERINFOFUNCTION, progress_callback);
     curl_easy_setopt(tool->curl, CURLOPT_XFERINFODATA, &progress_data);
     curl_easy_setopt(tool->curl, CURLOPT_NOPROGRESS, 0L);
-    curl_easy_setopt(tool->curl, CURLOPT_USERAGENT, "flux/1.0");
+    curl_easy_setopt(tool->curl, CURLOPT_USERAGENT, "flux/0.1.0");
 
     printf("Uploading: %s\n", local_file);
 

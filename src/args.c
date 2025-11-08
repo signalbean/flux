@@ -14,7 +14,7 @@ void usage(const char* program_name) {
 }
 
 void version(void) {
-    printf("flux version %s\n", VERSION);
+    printf("flux v%s\n", VERSION);
 }
 
 int parse(int argc, char* argv[], char** command, char** arg1, char** arg2, bool* resume) {
@@ -25,7 +25,7 @@ int parse(int argc, char* argv[], char** command, char** arg1, char** arg2, bool
     while (arg_offset < argc && argv[arg_offset][0] == '-') {
         // Check for command aliases first
         if (strcmp(argv[arg_offset], "-d") == 0 || strcmp(argv[arg_offset], "-u") == 0) {
-            break; // This is a command alias, not an option
+            break;
         } else if (strcmp(argv[arg_offset], "--no-resume") == 0 || strcmp(argv[arg_offset], "-n") == 0) {
             *resume = false;
         } else if (strcmp(argv[arg_offset], "--version") == 0 || strcmp(argv[arg_offset], "-v") == 0) {
