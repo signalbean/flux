@@ -20,8 +20,7 @@ CLI for downloading and uploading files with resume support.
 ## Build
 
 ```bash
-make           # Standard build
-make release   # Optimized build (smaller binary)
+make release # Standard build
 ```
 
 ## Usage
