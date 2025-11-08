@@ -1,6 +1,10 @@
+<div align="center">
+
 # FLUX
 
 CLI for downloading and uploading files with resume support.
+
+</div>
 
 ## Features
 
@@ -31,6 +35,10 @@ flux -d https://example.com/file.zip custom-name.zip
 flux upload file.txt https://example.com/upload
 ```
 
+<div align="center">
+
 ## License
 
 MIT
+
+</div>
